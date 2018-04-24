@@ -60,7 +60,7 @@ int M1_PWM=255; // Motor 1 was my slower motor
 int M2_PWM=255; // Motor 2 was my faster motor (so its max speed is scaled down. Drivers side with respect to the ultrasonic sensor
 
 //Constructor for the Ultrasonic distance finder to create an instance sonar as a global
-NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);     
+NewPing sonar(5, 6, 200);
              
 bool stopped = 1; //Trigger that the motors are stopped.
 
@@ -75,6 +75,7 @@ void setup()
     pinMode(M2, OUTPUT); // forward
     pinMode(M2_R, OUTPUT);   //rev
 */
+Serial.begin(9600);
 Drive setupDrive();
 } 
 
@@ -93,19 +94,27 @@ void loop() //Note, loop repeats infinitely
   ping_dist=sonar.ping_cm(); // Get a ping value 
   // ping will be zero if nothing detected, or will be a value in cm, if something is detected
 
-  if(ping_dist > 0)
-  MyDrive.Stop();
+/*if (ping_dist = 0)
+ {
+  ping_dist = 200;
+  }
+ */
+  Serial.println(ping_dist);
+  
   while (ping_dist>0&&ping_dist<30) // If ping is greater than 0 (that is non-zero), but less than 30, trigger a change angle
   {
-  /*  MyDrive.Stop();
+    MyDrive.Stop();
     delay(100); //This delay of 0.1 second is in here just to make it easier to see what the motor is doing.
     //This delay is completely unecessary.
-    MyDrive.TurnLeft();
+    MyDrive.TurnRight();
     MyDrive.Stop();
     stopped=1; // motor was stopped
     ping_dist=sonar.ping_cm(); // Get a new ping value 
-  */
-  MyDrive.Stop();
+    if (ping_dist = 0)
+    {
+      ping_dist = 200;
+    }
+    Serial.println(ping_dist); 
   }  
 
 }
@@ -143,10 +152,11 @@ void Drive::Stop(void)
   return;
 }
 
-void Drive::TurnLeft(void)
+void Drive::TurnRight(void)
 {
     digitalWrite(M1_R,HIGH); //turn (Motor 1 in reverse motor 2 forward
     digitalWrite(M2,HIGH);
+    
     
         for (int i(0);i<101;i++) //Ramp up speed
     {
