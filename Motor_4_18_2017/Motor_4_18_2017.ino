@@ -37,7 +37,7 @@ bool stopped = 1; //Trigger that the motors are stopped.
 void setup() 
 { 
 Serial.begin(9600);
-Drive setupDrive();
+Drive setupDrive(); //set up drive instance and call default constructor to initialize pin names
 } 
 
 void loop() //Note, loop repeats infinitely
