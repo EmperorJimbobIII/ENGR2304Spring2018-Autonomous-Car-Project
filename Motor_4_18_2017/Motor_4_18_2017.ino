@@ -41,15 +41,6 @@ class Drive
 //Or, you can switch the pin connections
 //Or, in the code below, you could switch the pin numbers.
 //Try it all and see what works best for you.
-/*
-  
- int E1 = 10;  // Passengers Side
-int M1 = 13; // Forward
-int M1_R = 12; // Rev 
-int E2 = 9;    //Drivers Side                  
-int M2 = 8; // Forward
-int M2_R = 7; // Rev     
-*/
 
 //Motor speed calibration.  Run it on the floor with both values at 255
 //It will curve left or right.  Curving left means that the right motor is going faster.
@@ -66,15 +57,6 @@ bool stopped = 1; //Trigger that the motors are stopped.
 
 void setup() 
 { 
-  //Set up all of the pins used for the motor as output pins
-   /* pinMode(E1, OUTPUT); //speed for passengers side motor
-    pinMode(M1, OUTPUT);    //HIGH if forward, LOW not forward
-    pinMode(M1_R, OUTPUT);  //HIGH if reverse, LOW not reverse
-    
-    pinMode(E2, OUTPUT);  //speed for drivers side
-    pinMode(M2, OUTPUT); // forward
-    pinMode(M2_R, OUTPUT);   //rev
-*/
 Serial.begin(9600);
 Drive setupDrive();
 } 
