@@ -2,18 +2,6 @@
 // See this website.  Add the library to your librarys folder C:\Program Files (x86)\Arduino\libraries
 // http://playground.arduino.cc/Code/NewPing
 
-//This is part of the NewPing.  Update your pin location here, depending on how you have it set up.
-#define TRIGGER_PIN  6
-#define ECHO_PIN     5
-#define MAX_DISTANCE 200 //Max distance to look in cm
-
-//Function prototypes
-/*
-void Forward(void); // Turns off all reverse and ramps engines up to max
-void Stop(void); //Set speed to zero and turn off forward and reverse
-void Turn(void); //Makes a turn to avoid obstacle
-*/
-
 class Drive 
 {
  private:
@@ -32,24 +20,6 @@ class Drive
        Drive(void);
 };
 
-//This is for the L298N motor controller.  The values are the pin locations
-//that you use to connect the ENA(E1), IN1(M1), IN2(M1_R), ENA(E2), IN4(M2), and IN3(M2_R)
-//ENA and ENB are the variable power for the motor
-//IN1 and IN2 are on/off for forward or reverse for motor A
-//IN4 and IN3 are on/off for forward or reverse for motor B
-//If one or both motors are running backwards, you can switch the power to the motor (OUT1 and OUT2 or OUT3 and OUT4)
-//Or, you can switch the pin connections
-//Or, in the code below, you could switch the pin numbers.
-//Try it all and see what works best for you.
-
-//Motor speed calibration.  Run it on the floor with both values at 255
-//It will curve left or right.  Curving left means that the right motor is going faster.
-//Curving to the right means the left motor is going faster.
-//Leave your slower motor at 255.  Change the value down for you faster motor.
-//Repeat until it runs straight (unless you wanted it to run in big circles).
-int M1_PWM=255; // Motor 1 was my slower motor
-int M2_PWM=255; // Motor 2 was my faster motor (so its max speed is scaled down. Drivers side with respect to the ultrasonic sensor
-
 //Constructor for the Ultrasonic distance finder to create an instance sonar as a global
 NewPing sonar(5, 6, 200);
              
@@ -63,8 +33,8 @@ Drive setupDrive();
 
 void loop() //Note, loop repeats infinitely
 { 
-  Drive MyDrive;
-  int ping_dist; // Variable to store the ping distance.  Distance is in cm
+  Drive MyDrive; //set up default constructor and initialize motor names and values
+  int ping_dist;// Variable to store the ping distance.  Distance is in cm
   if (stopped)  //If it is not stopped and the sonar is not triggered, it is moving forward and will stay moving forward
   {
     MyDrive.Forward();
@@ -82,12 +52,17 @@ void loop() //Note, loop repeats infinitely
   }
  */
   Serial.println(ping_dist);
-  
+
+
+  /*
+   * Add logic using if statements to determine which direction the vehicle should turn
+   */
   while (ping_dist>0&&ping_dist<30) // If ping is greater than 0 (that is non-zero), but less than 30, trigger a change angle
   {
     MyDrive.Stop();
     delay(100); //This delay of 0.1 second is in here just to make it easier to see what the motor is doing.
     //This delay is completely unecessary.
+    MyDrive.Backward //Just for testing purposes, remove or change location later
     MyDrive.TurnRight();
     MyDrive.Stop();
     stopped=1; // motor was stopped
@@ -98,6 +73,7 @@ void loop() //Note, loop repeats infinitely
     }
     Serial.println(ping_dist); 
   }  
+
 
 }
 
@@ -169,10 +145,28 @@ void Drive::TurnRight(void)
 
  Drive::Drive()
   {
-    int E1 = 10;  // Passengers Side
+      //This is for the L298N motor controller.  The values are the pin locations
+      //that you use to connect the ENA(E1), IN1(M1), IN2(M1_R), ENA(E2), IN4(M2), and IN3(M2_R)
+      //ENA and ENB are the variable power for the motor
+      //IN1 and IN2 are on/off for forward or reverse for motor A
+      //IN4 and IN3 are on/off for forward or reverse for motor B
+      //If one or both motors are running backwards, you can switch the power to the motor (OUT1 and OUT2 or OUT3 and OUT4)
+      //Or, you can switch the pin connections
+      //Or, in the code below, you could switch the pin numbers.
+      //Try it all and see what works best for you.
+      
+      int E1 = 10;  // Passengers Side
       int M1 = 13; // Forward
       int M1_R = 12; // Rev 
       int E2 = 9;    //Drivers Side                  
       int M2 = 8; // Forward
       int M2_R = 7; // Rev
+
+      //Motor speed calibration.  Run it on the floor with both values at 255
+      //It will curve left or right.  Curving left means that the right motor is going faster.
+      //Curving to the right means the left motor is going faster.
+      //Leave your slower motor at 255.  Change the value down for you faster motor.
+      //Repeat until it runs straight (unless you wanted it to run in big circles).
+      int M1_PWM=255; // Passenger side with respect to the ultrasonic sensor
+      int M2_PWM=255; // Drivers side with respect to the ultrasonic sensor
     }
